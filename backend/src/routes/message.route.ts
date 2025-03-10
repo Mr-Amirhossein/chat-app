@@ -1,0 +1,15 @@
+import express from "express";
+import protectRoute from "../middleware/protectRoute.ts";
+import {
+  getMessages,
+  getUsersForSidebar,
+  sendMessage,
+} from "../controllers/message.controller.ts";
+const router = express.Router();
+
+router.get("/conversations", protectRoute, getUsersForSidebar);
+router.get("/:id", protectRoute, getMessages);
+
+router.post("/send/:id", protectRoute, sendMessage);
+
+export default router;
