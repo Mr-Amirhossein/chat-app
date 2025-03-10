@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import prisma from "../db/prisma.ts";
+import { getReceiverSocketId, io } from "../socket/socket.ts";
 
 export const sendMessage = async (req: Request, res: Response) => {
   try {
@@ -48,6 +49,10 @@ export const sendMessage = async (req: Request, res: Response) => {
       });
     }
     // socket.io logic will be added here
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
     res.status(201).json(newMessage);
   } catch (error: any) {
     console.log("Error in send message route", error.message);
